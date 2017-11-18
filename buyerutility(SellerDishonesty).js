@@ -1,14 +1,16 @@
-function createOrder(rate) {
-	//10000个订单
-	for (var j = 0; j < 50000; j++) {
+/*
+ * 用户类型改变不依概率选择商家，Buyer的Utility
+ */
+//10000个订单
+function createOrder(num, rate) {
+	for (var j = 0; j < num; j++) {
 
-		//console.log(j+" Start")
 		//按天选
 		var len = Buyers.length;
 		var pos = j % len
 		currentBuyer = Buyers[pos]
-		var badrat = false;
 		var currentSeller = findSeller();
+		var badrat = false;
 
 		typeof badTransactions1[currentBuyer.BID] == "undefined" ? badTransactions1[currentBuyer.BID] = [] : 1;
 		typeof badTransactions2[currentBuyer.BID] == "undefined" ? badTransactions2[currentBuyer.BID] = [] : 1;
@@ -16,12 +18,17 @@ function createOrder(rate) {
 
 		//买家类型为1
 		if (currentBuyer.type == 1) {
-			if (badTransactions1[currentBuyer.BID].length >= getHighRpSellerNum(Sellers)) {
+
+			if (badTransactions1[currentBuyer.BID].length >= 50) {
+				currentBuyer.type = 3
+				currentBuyer.isChange = true;
 				continue
 			}
+			//寻找信誉大于0.5的且从未交易过的商家
 			while (currentSeller.honesty < 0.5 || isSellerIn(currentSeller, badTransactions1[currentBuyer.BID])) {
 				currentSeller = findSeller()
 			}
+			//一定概率不交易
 			var R = Math.random()
 			if (R > currentSeller.honesty) {
 				badrat = true;
@@ -31,10 +38,9 @@ function createOrder(rate) {
 		}
 		//买家类型为2
 		if (currentBuyer.type == 2) {
-			if (badTransactions2[currentBuyer.BID].length >= getLowRpSellerNum(Sellers)) {
-				// type2num+=1;
-				// if(type2num>=33)
-				// 	break
+			if (badTransactions2[currentBuyer.BID].length >= 40) {
+				currentBuyer.type = 3
+				currentBuyer.isChange = true;
 				continue;
 			}
 			while (currentSeller.honesty >= 0.5 || isSellerIn(currentSeller, badTransactions2[currentBuyer.BID])) {
@@ -48,7 +54,31 @@ function createOrder(rate) {
 		}
 		//买家类型为3
 		if (currentBuyer.type == 3) {
-			if (badTransactions3[currentBuyer.BID].length >= getHighRpSellerNum(Sellers)) {
+
+			// if (currentBuyer.originalType != 3) {
+			// 	currentBuyer.originalType = 3;
+			// 	typeof goodTransaction[currentBuyer.BID] == "undefined" ? goodTransaction[currentBuyer.BID] = [] : 1;
+
+			// 	currentBuyer.isChange = true;
+			// 	var nextSeller = findsellerp()
+			// 	goodTransaction[currentBuyer.BID].push(nextSeller)
+			// 	currentSeller = nextSeller
+			// 		//console.log("x1:"+goodTransaction[currentBuyer.BID]+", "+nextSeller)
+
+			// } 
+			// else if (currentBuyer.isChange) {
+			// 	badTransactions3[currentBuyer.BID] = [];
+			// 	//console.log("xx:"+goodTransaction[currentBuyer.BID])
+			// 	currentSeller = goodTransaction[currentBuyer.BID][0]
+
+			// } 
+			if (badTransactions3[currentBuyer.BID].length >= 50) {
+				// typeof goodTransaction[currentBuyer.BID] == "undefined" ? goodTransaction[currentBuyer.BID] = [] : 1;
+
+				// currentBuyer.isChange = true;
+				// var nextSeller = findsellerp()
+				// goodTransaction[currentBuyer.BID].push(nextSeller)
+				// currentSeller = nextSeller
 				continue;
 
 			} else {
@@ -58,7 +88,7 @@ function createOrder(rate) {
 					if (R > seller.honesty) {
 						badrat = true;
 						var nextSeller = findSeller()
-						while (nextSeller.honesty < seller.honesty && isSellerIn(currentSeller, badTransactions3[currentBuyer.BID])) {
+						while (nextSeller.honesty < 0.5) {
 							nextSeller = findSeller()
 						}
 						badTransactions3[currentBuyer.BID].push(nextSeller)
@@ -66,7 +96,6 @@ function createOrder(rate) {
 				}
 				//回购
 				if (badTransactions3[currentBuyer.BID].length != 0) {
-					//取上次的交易商家，交易完判断商家是否
 					currentSeller = badTransactions3[currentBuyer.BID][badTransactions3[currentBuyer.BID].length - 1]
 					findNextSeller(currentSeller);
 
@@ -83,7 +112,6 @@ function createOrder(rate) {
 
 		}
 
-		//console.log(j)
 		//差评虚拟
 		var sp = currentSeller.honesty;
 		if (badrat) {
@@ -129,128 +157,106 @@ function createOrder(rate) {
 			"Wij": calculateWij(currentBuyer, currentSeller),
 			'ratting': sp,
 			"bt": currentBuyer.type,
-			"butility": currentBuyer.utility,
-			"cj": currentBuyer.Cj,
-			"mcash": currentBuyer.Cj * currentSeller.honesty * 4
-		}
+			"butility": currentBuyer.utility
 
-		
-		console.log("单号("+rate+"虚假)："+j)
+		}
+		console.log("订单：" + j);
+
 		Transactions.push(Transaction)
+		if (pos == 0) {
+			var price1 = Transactions.filter((item) => {
+				if (item.bt == 1)
+					return true
+			})
 
+			var price2 = Transactions.filter((item) => {
+				if (item.bt == 2)
+					return true
+			})
 
-		// if (pos == 0 && j != 0) {
-
-
-		// 	var c1 = Transactions.filter((item) => {
-		// 		if (item.buyer.type == 1)
-		// 			return true
-		// 	})
-		// 	var c2 = Transactions.filter((item) => {
-		// 		if (item.buyer.type == 2)
-		// 			return true
-		// 	})
-
-		// 	var c3 = Transactions.filter((item) => {
-		// 		if (item.buyer.type == 3)
-		// 			return true
-		// 	})
-
-		// 	var tmps1 = 0,
-		// 		tmps2 = 0,
-		// 		tmps3 = 0
-
-
-
-		// 	c1.forEach((item) => {
-		// 		tmps1 += item.cj
-		// 	})
-		// 	c2.forEach((item) => {
-		// 		tmps2 += item.cj
-		// 	})
-		// 	c3.forEach((item) => {
-		// 		tmps3 += item.cj
-		// 	})
-		// 	b1p.push(tmps1 / c1.length)
-		// 	b2p.push(tmps2 / c2.length)
-		// 	b3p.push(tmps3 / c3.length)
-		// 	ss += 1;
-		// 	xz.push(ss)
-		// }
-
-	}
-}
-
-function getavg(array,interval){
-	var result = []
-	var tmp = 0;
-	for(var i = 0 ;i<array.length;i++){
-		tmp+=array[i];
-		if(i % interval == 0 && i != 0){
-			result.push(tmp/interval)
-			tmp = 0
+			var price3 = Transactions.filter((item) => {
+				if (item.bt == 3)
+					return true
+			})
+			var tmps1 = 0,
+				tmps2 = 0,
+				tmps3 = 0
+			price1.forEach((item) => {
+				tmps1 += item.butility
+			})
+			price2.forEach((item) => {
+				tmps2 += item.butility
+			})
+			price3.forEach((item) => {
+				tmps3 += item.butility
+			})
+			s1 += tmps1;
+			s2 += tmps2;
+			s3 += tmps3
+			b1p.push(tmps1)
+			b2p.push(tmps2)
+			b3p.push(tmps3)
+			ss += 1;
+			xz.push(ss)
+			console.log(tmps2)
 		}
 	}
-	result.push(tmp/interval)
-	return result;
 }
-
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(0.3)
-var xdata1 = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180]
-var ydata1 = []
-Sellers.forEach(function(item){
-	ydata1.push(item.Rj)
-})
+createOrder(30200,0)
 
-init()
-createBuyer(99)
-createSeller(180)
-createOrder(0.6)
-var ydata2 = []
-Sellers.forEach(function(item){
-	ydata2.push(item.Rj)
-})
-
-init()
-createBuyer(99)
-createSeller(180)
-createOrder(0.9)
-
-var ydata3 = []
-Sellers.forEach(function(item){
-
-	ydata3.push(item.Rj)
-})
-
-console.log(Sellers)
-// var b1 = b3p
-// init()
-// createBuyer(99)
-// createSeller(180)
-// createOrder(0.6)
-// var b2 = b3p
-// init()
-// createBuyer(99)
-// createSeller(180)
-// createOrder(0.9)
-// var b3 = b3p
-
-// console.table(Buyers)
-// console.table(Sellers)
-
-
+function sumprice(array) {
+	var sum = 0;
+	array.forEach((item) => {
+		sum += item.truePrice
+	})
+	return sum;
+}
 var myChart = echarts.init(document.getElementById('main'));
 
 
 
+var price1 = Transactions.filter((item) => {
+	if (item.bt == 1)
+		return true
+})
+
+var price2 = Transactions.filter((item) => {
+	if (item.bt == 2)
+		return true
+})
+
+var price3 = Transactions.filter((item) => {
+	if (item.bt == 3)
+		return true
+})
+
+function min(a, b, c) {
+	var result = []
+	result.push(a.length)
+	result.push(b.length)
+	result.push(c.length)
+
+	result.sort();
+	return result[0]
+
+}
+console.log(price1.length + ", " + price2.length + ", " + price3.length)
+var x = Buyers.filter((item) => {
+	if (item.type == 1)
+		return true;
+})
+console.log(x + " , " + ss)
+
+//console.log(price9)
+
 //指定图表的配置项和数据
 var option = {
 	title: {
-		text: 'Seller Order Number',
-		subtext:'Three Type False Evaluation'
+		text: 'Buyer Utility',
+		subtext: 'Seller Dishonesty',
 	},
 	tooltip: {},
 	toolbox: {
@@ -276,30 +282,26 @@ var option = {
 	},
 	legend: {
 		data: [{
-			name: '30%',
+			name: '1',
 			icon: 'circle'
 		}, {
-			name: '60%',
+			name: '2',
 			icon: 'triangle'
 		}, {
-			name: '90%',
+			name: '3',
 		}]
 	},
 	xAxis: {
-		data: xdata1,
-		axisLabel:{
-			interval:0
-		}
+		data: xz
 	},
 	yAxis: {
-		//min: 16,
-		//max: 20
+		max: 50000
 	},
 	series: [{
-		name: '30%',
+		name: '1',
 		type: 'line',
 		smooth: true,
-		data: getavg(ydata1,10),
+		data: b1p,
 		lineStyle: {
 			normal: {
 				type: "dotted"
@@ -314,10 +316,10 @@ var option = {
 		clipOverFlow: true,
 		symbolSize: 10
 	}, {
-		name: '60%',
+		name: '2',
 		type: 'line',
 		smooth: true,
-		data: getavg(ydata2,10),
+		data: b2p,
 		lineStyle: {
 			normal: {
 				type: "dashed"
@@ -327,12 +329,19 @@ var option = {
 		symbol: 'triangle',
 		symbolSize: 10
 	}, {
-		name: '90%',
+		name: '3',
 		type: 'line',
 		smooth: true,
 		symbolSize: 10,
-		data: getavg(ydata3,10),
+		data: b3p,
 		clipOverFlow: true,
+
+		markLine: {
+			data: [{
+				type: 'max',
+				name: 'max'
+			}]
+		}
 	}]
 };
 

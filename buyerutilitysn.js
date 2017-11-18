@@ -5,9 +5,6 @@ for (var j = 0; j < 25000; j++) {
 	var len = Buyers.length;
 	var pos = j % len
 	currentBuyer = Buyers[pos]
-		//随机选用户
-		// var x = Math.floor(Math.random() * 99)
-		// var currentBuyer = Buyers[x]
 	var currentSeller = findSeller();
 
 	typeof badTransactions1[currentBuyer.BID] == "undefined" ? badTransactions1[currentBuyer.BID] = [] : 1;

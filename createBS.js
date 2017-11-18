@@ -4,6 +4,7 @@ var Transactions = [];
 var badTransactions1 = [];
 var badTransactions2 = [];
 var badTransactions3 = [];
+var type3LastTx = [];
 var goodTransaction = [];
 var badBehavior = false
 var ss = 0;
@@ -27,13 +28,27 @@ function init() {
 	badBehavior = false
 	ss = 0;
 	s1 = 0,
-	s2 = 0,
-	s3 = 0
+		s2 = 0,
+		s3 = 0
 
 	b1p = []
 	b2p = []
 	b3p = []
 	xz = []
+}
+
+function getavg(array, interval) {
+	var result = []
+	var tmp = 0;
+	for (var i = 0; i < array.length; i++) {
+		tmp += array[i];
+		if (i % interval == 0 && i != 0) {
+			result.push(tmp / interval)
+			tmp = 0
+		}
+	}
+	result.push(tmp / interval)
+	return result;
 }
 
 /*计算Wij*/
@@ -110,7 +125,6 @@ function updateHonest(seller) {
 	}
 
 }
-
 /*计算刨除指定用户的商家的Rj*/
 function getRjExceptBuyer(seller, buyer) {
 	//过滤交易
@@ -138,10 +152,7 @@ function getRjExceptBuyer(seller, buyer) {
 /*更新用户Cj*/
 function updateCredibility(buyer, seller) {
 
-	var Rj = getRjExceptBuyer(seller, buyer)
-		// if(buyer.type==1||buyer.type==2)
-		// 	return Rj
-		//过滤交易
+
 	var buyers = Transactions.filter(function(item) {
 		if (item.buyer.BID == buyer.BID && item.seller.SID == seller.SID)
 			return true
