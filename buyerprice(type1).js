@@ -1,5 +1,5 @@
 /**
- * 第一类实验：Buyer：Cj
+ * 第一类实验：Buyer：Price
  * 程序设定：
  * 1.第一类、第二类用户不变，Wij=1，始终更新Cj，Cj~=Rk_j
  * 2.好评差评随机给分（大于或小于其honesty的分数）
@@ -241,17 +241,16 @@ function createOrder(num, rate) {
 		if (pos == 0 && j != 0) {
 
 			//console.table(Buyers)
-			var c1 = Buyers.filter((item) => {
-				if (item.type == 1)
+			var c1 = Transactions.filter((item) => {
+				if (item.buyer.type == 1)
 					return true
 			})
-			var c2 = Buyers.filter((item) => {
-				if (item.type == 2)
+			var c2 = Transactions.filter((item) => {
+				if (item.buyer.type == 2)
 					return true
 			})
-
-			var c3 = Buyers.filter((item) => {
-				if (item.type == 3)
+			var c3 = Transactions.filter((item) => {
+				if (item.buyer.type == 3)
 					return true
 			})
 
@@ -262,13 +261,13 @@ function createOrder(num, rate) {
 
 
 			c1.forEach((item) => {
-				tmps1 += item.Cj
+				tmps1 += item.truePrice
 			})
 			c2.forEach((item) => {
-				tmps2 += item.Cj
+				tmps2 += item.truePrice
 			})
 			c3.forEach((item) => {
-				tmps3 += item.Cj
+				tmps3 += item.truePrice
 			})
 			b1p.push(tmps1 / c1.length)
 			b2p.push(tmps2 / c2.length)
@@ -336,7 +335,7 @@ var myChart = echarts.init(document.getElementById('main'));
 //指定图表的配置项和数据
 var option = {
 	title: {
-		text: 'Buyer Credibility',
+		text: 'Buyer Purchase Price',
 	},
 	tooltip: {},
 	toolbox: {
@@ -369,13 +368,15 @@ var option = {
 			icon: 'triangle'
 		}, {
 			name: 'Type 3',
-		}]
+		}],
+		left:200
 	},
 	xAxis: {
 		data: xz
 	},
 	yAxis: {
-		max:1
+		max:20,
+		min:16
 	},
 	series: [{
 		name: 'Type 1',

@@ -282,7 +282,7 @@ function createOrder(num, rate) {
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(40000,0)
+createOrder(30000,0)
 
 
 
@@ -362,13 +362,13 @@ var option = {
 	},
 	legend: {
 		data: [{
-			name: '1',
+			name: 'Type 1',
 			icon: 'circle'
 		}, {
-			name: '2',
+			name: 'Type 2',
 			icon: 'triangle'
 		}, {
-			name: '3',
+			name: 'Type 3',
 		}]
 	},
 	xAxis: {
@@ -378,7 +378,7 @@ var option = {
 		max:1
 	},
 	series: [{
-		name: '1',
+		name: 'Type 1',
 		type: 'line',
 		smooth: true,
 		data: b1p,
@@ -387,7 +387,12 @@ var option = {
 				type: "dotted"
 			}
 		},
-		symbol: 'circle',
+		itemStyle:{
+			normal:{
+				color:"darkgreen"
+			}
+		},
+		
 		label: {
 			emphasis: {
 				show: true
@@ -396,32 +401,43 @@ var option = {
 		clipOverFlow: true,
 		symbolSize: 10
 	}, {
-		name: '2',
+		name: 'Type 2',
 		type: 'line',
 		smooth: true,
 		data: b2p,
+		itemStyle:{
+			normal:{
+				color:"black"
+			}
+		},
 		lineStyle: {
 			normal: {
-				type: "dashed"
+				type: "dashed",
+
 			}
 		},
 		clipOverFlow: true,
 		symbol: 'triangle',
 		symbolSize: 10
 	}, {
-		name: '3',
+		name: 'Type 3',
+		symbol: 'circle',
 		type: 'line',
 		smooth: true,
 		symbolSize: 10,
 		data: b3p,
 		clipOverFlow: true,
-
-		markLine: {
-			data: [{
-				type: 'max',
-				name: 'max'
-			}]
-		}
+		itemStyle:{
+			normal:{
+				color:"#CC3300"
+			}
+		},
+		// markLine: {
+		// 	data: [{
+		// 		type: 'max',
+		// 		name: 'max'
+		// 	}]
+		// }
 	}]
 };
 

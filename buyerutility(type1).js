@@ -1,5 +1,5 @@
 /**
- * 第一类实验：Buyer：Cj
+ * 第一类实验：Buyer：Price
  * 程序设定：
  * 1.第一类、第二类用户不变，Wij=1，始终更新Cj，Cj~=Rk_j
  * 2.好评差评随机给分（大于或小于其honesty的分数）
@@ -124,7 +124,7 @@ function createOrder(num, rate) {
 							nextSeller = findSeller()
 						}
 						type3LastTx[currentBuyer.BID][0] = nextSeller;
-						
+
 						updateCredibility(currentBuyer, currentSeller)
 					}
 
@@ -147,9 +147,8 @@ function createOrder(num, rate) {
 							nextSeller = findSeller()
 						}
 						type3LastTx[currentBuyer.BID][0] = nextSeller;
-						
-					}
-					else{
+
+					} else {
 						type3LastTx[currentBuyer.BID][0] = currentSeller
 					}
 				}
@@ -160,21 +159,20 @@ function createOrder(num, rate) {
 		//差评虚拟
 		var sp = currentSeller.honesty;
 		if (badrat) {
-			badrat = false;
+			
 			var R = Math.random()
-			if(currentSeller.honesty > 0.5){
-				while (R > currentSeller.honesty ) {
+			if (currentSeller.honesty > 0.5) {
+				while (R > currentSeller.honesty) {
 					R = Math.random()
 				}
 				sp = R
-			}
-			else{
+			} else {
 				while (R > currentSeller.honesty) {
 					R = Math.random()
 				}
 				sp = R
 			}
-			
+
 			// if (R < rate) {
 			// 	R = Math.random()
 			// 	while (R < currentSeller.honesty) {
@@ -196,22 +194,22 @@ function createOrder(num, rate) {
 				R = Math.random()
 			}
 			sp = R
-			// var R = Math.random()
-			// 	//0.5几率给差评
-			// if (R < rate) {
-			// 	R = Math.random()
-			// 		//随机找到小于原商家honesty的值
-			// 	while (R > currentSeller.honesty) {
-			// 		R = Math.random()
-			// 	}
-			// 	sp = R
-			// }
+				// var R = Math.random()
+				// 	//0.5几率给差评
+				// if (R < rate) {
+				// 	R = Math.random()
+				// 		//随机找到小于原商家honesty的值
+				// 	while (R > currentSeller.honesty) {
+				// 		R = Math.random()
+				// 	}
+				// 	sp = R
+				// }
 		}
-		
+
 		typeof TransactionsS[currentSeller.SID] == "undefined" ? TransactionsS[currentSeller.SID] = [] : 1;
-		
-		
-		
+
+
+
 		currentBuyer.utility = currentBuyer.Cj * currentSeller.honesty * 4
 
 		var Transaction = {
@@ -219,39 +217,40 @@ function createOrder(num, rate) {
 			"seller": currentSeller,
 			"Tid": j + 1,
 			"truePrice": currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4,
+			"sutility":badrat ? 2 * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
 			"Wij": currentBuyer.type == 3 ? calculateWij(currentBuyer, currentSeller) : 1,
 			'ratting': sp,
 			"bt": currentBuyer.type,
-			"butility": currentBuyer.utility,
-			"Rk_j":getRjExceptBuyer(currentSeller,currentSeller)
+			"butility": badrat ? 0 : currentBuyer.utility,
+			"Rk_j": getRjExceptBuyer(currentSeller, currentSeller)
 
 		}
 		TransactionsB[currentBuyer.BID].push(Transaction)
 		TransactionsS[currentSeller.SID].push(Transaction)
-		//console.log("订单：" + j);
+		console.log("订单：" + j+" , "+Transaction.sutility);
 
 		Transactions.push(Transaction)
 		updateHonest(currentSeller)
-		if(currentBuyer.type!=3){
+		if (currentBuyer.type != 3) {
 			updateCredibility(currentBuyer, currentSeller)
 		}
-		if(currentBuyer.BID == 49){
-			console.log(49+" => "+currentSeller.SID+" , "+currentSeller.Rj+" , "+currentBuyer.Cj + " , "+Transaction.Rk_j)
+		if (currentBuyer.BID == 49) {
+			console.log(49 + " => " + currentSeller.SID + " , " + currentSeller.Rj + " , " + currentBuyer.Cj + " , " + Transaction.Rk_j)
 		}
+		badrat = false;
 		if (pos == 0 && j != 0) {
 
 			//console.table(Buyers)
-			var c1 = Buyers.filter((item) => {
-				if (item.type == 1)
+			var c1 = Transactions.filter((item) => {
+				if (item.buyer.type == 1)
 					return true
 			})
-			var c2 = Buyers.filter((item) => {
-				if (item.type == 2)
+			var c2 = Transactions.filter((item) => {
+				if (item.buyer.type == 2)
 					return true
 			})
-
-			var c3 = Buyers.filter((item) => {
-				if (item.type == 3)
+			var c3 = Transactions.filter((item) => {
+				if (item.buyer.type == 3)
 					return true
 			})
 
@@ -262,17 +261,17 @@ function createOrder(num, rate) {
 
 
 			c1.forEach((item) => {
-				tmps1 += item.Cj
+				tmps1 += item.butility
 			})
 			c2.forEach((item) => {
-				tmps2 += item.Cj
+				tmps2 += item.butility
 			})
 			c3.forEach((item) => {
-				tmps3 += item.Cj
+				tmps3 += item.butility
 			})
-			b1p.push(tmps1 / c1.length)
-			b2p.push(tmps2 / c2.length)
-			b3p.push(tmps3 / c3.length)
+			b1p.push(tmps1)
+			b2p.push(tmps2)
+			b3p.push(tmps3)
 			console.log(tmps2 / c2.length)
 			ss += 1;
 			xz.push(ss)
@@ -282,17 +281,17 @@ function createOrder(num, rate) {
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(30000,0)
+createOrder(30000, 0)
 
-
-
-function sumprice(array) {
+function sumUtility(tx){
 	var sum = 0;
-	array.forEach((item) => {
-		sum += item.truePrice
+	tx.forEach(x =>{
+		sum += x.sutility
 	})
 	return sum;
 }
+
+
 
 
 var myChart = echarts.init(document.getElementById('main'));
@@ -336,7 +335,7 @@ var myChart = echarts.init(document.getElementById('main'));
 //指定图表的配置项和数据
 var option = {
 	title: {
-		text: 'Buyer Credibility',
+		text: 'Buyer Utility',
 	},
 	tooltip: {},
 	toolbox: {
@@ -369,13 +368,12 @@ var option = {
 			icon: 'triangle'
 		}, {
 			name: 'Type 3',
-		}]
+		}],
 	},
 	xAxis: {
 		data: xz
 	},
 	yAxis: {
-		max:1
 	},
 	series: [{
 		name: 'Type 1',
