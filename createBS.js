@@ -19,6 +19,11 @@ var b2p = []
 var b3p = []
 var xz = []
 
+var b1p2 = []
+var b2p2 = []
+var b3p2 = []
+var xz2 = []
+
 function init() {
 	Buyers = [];
 	Sellers = [];
@@ -33,10 +38,10 @@ function init() {
 		s2 = 0,
 		s3 = 0
 
-	b1p = []
-	b2p = []
-	b3p = []
-	xz = []
+	//b1p = []
+	//b2p = []
+	//b3p = []
+	//xz = []
 }
 
 function getavg(array, interval) {
@@ -208,33 +213,35 @@ function findSeller() {
 function findSelleProbability() {
 
 	var R = Math.random()
+	console.log(R)
 		//1/15的概率选择0.5的商家
 	if (R < (1 / 15)) {
-		var x = randomNum(40, 50)
+		var x = randomNum(80, 100)
 		var currentSeller = Sellers[x]
 		return currentSeller;
 	}
 	//2/15的概率选择0.6的商家
 	else if (R < (3 / 15)) {
-		var x = randomNum(50, 60)
+		var x = randomNum(100, 120)
 		var currentSeller = Sellers[x]
 		return currentSeller;
 	}
 	//3/15的概率选择0.7的商家
 	else if (R < (6 / 15)) {
-		var x = randomNum(60, 70)
+		var x = randomNum(120, 140)
 		var currentSeller = Sellers[x]
 		return currentSeller;
 	}
 	//4/15的概率选择0.8的商家
 	else if (R < (10 / 15)) {
-		var x = randomNum(70, 80)
+		var x = randomNum(140, 160)
 		var currentSeller = Sellers[x]
 		return currentSeller;
 	}
 	//5/15的概率选择0.9的商家
 	else if (R <= 1) {
-		var x = randomNum(80, 89)
+		var x = randomNum(160, 179)
+		console.log(x)
 		var currentSeller = Sellers[x]
 		return currentSeller;
 	}

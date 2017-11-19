@@ -243,12 +243,7 @@ function min(a, b, c) {
 	return result[0]
 
 }
-console.log(price1.length + ", " + price2.length + ", " + price3.length)
-var x = Buyers.filter((item) => {
-	if (item.type == 1)
-		return true;
-})
-console.log(x + " , " + ss)
+
 
 //console.log(price9)
 
