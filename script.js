@@ -1,7 +1,14 @@
-/*
- * 用户类型不改变不依概率选择商家，Buyer的credibility
+/**
+ * 第一类实验：Buyer：Cj
+ * 程序设定：
+ * 1.第一类、第二类用户不变，Wij=1，始终更新Cj，Cj~=Rk_j
+ * 2.好评差评随机给分（大于或小于其honesty的分数）
+ * 3.计算Rj默认返回值为seller.honesty
+ * 4.Cj默认返回值为0
+ * 5.Rj默认初始值为seller.honesty
+ * 
  */
-//10000个订单
+
 function createOrder(num, rate) {
 
 	for (var j = 0; j < num; j++) {
@@ -156,7 +163,7 @@ function createOrder(num, rate) {
 			badrat = false;
 			var R = Math.random()
 			if(currentSeller.honesty > 0.5){
-				while (R > currentSeller.honesty || R < 0.5) {
+				while (R > currentSeller.honesty ) {
 					R = Math.random()
 				}
 				sp = R
@@ -275,7 +282,7 @@ function createOrder(num, rate) {
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(20000,0)
+createOrder(40000,0)
 
 
 
