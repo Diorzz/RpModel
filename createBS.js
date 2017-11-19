@@ -1,6 +1,8 @@
 var Buyers = [];
 var Sellers = [];
 var Transactions = [];
+var TransactionsB = [];
+var TransactionsS = [];
 var badTransactions1 = [];
 var badTransactions2 = [];
 var badTransactions3 = [];
@@ -54,8 +56,8 @@ function getavg(array, interval) {
 /*计算Wij*/
 function calculateWij(buyer, seller) {
 	//Fij
-	var Fij = Transactions.filter(function(i) {
-		if (i.buyer.BID == buyer.BID && i.seller.SID == seller.SID)
+	var Fij = TransactionsB[buyer.BID].filter(function(i) {
+		if (i.seller.SID == seller.SID)
 			return true
 	}).length;
 
@@ -101,10 +103,7 @@ function calculateWij(buyer, seller) {
 /*更新商家honest*/
 function updateHonest(seller) {
 	//获得该商家的所有交易
-	var sellers = Transactions.filter(function(item) {
-			if (item.seller.SID == seller.SID)
-				return true;
-		})
+	var sellers = TransactionsS[seller.SID]
 		//如果存在记录计算，否则返回0.5
 	if (sellers.length > 0) {
 
@@ -121,15 +120,15 @@ function updateHonest(seller) {
 
 	} else {
 
-		return 0.5
+		return seller.honesty
 	}
 
 }
 /*计算刨除指定用户的商家的Rj*/
 function getRjExceptBuyer(seller, buyer) {
 	//过滤交易
-	var sellers = Transactions.filter(function(item) {
-			if (item.seller.SID == seller.SID && item.buyer.BID != buyer.BID)
+	var sellers = TransactionsS[seller.SID].filter(function(item) {
+			if (item.buyer.BID != buyer.BID)
 				return true
 		})
 		//计算Rij如果可以获取到值
@@ -145,7 +144,7 @@ function getRjExceptBuyer(seller, buyer) {
 
 	} else {
 
-		return 0.5
+		return seller.honesty
 	}
 }
 
@@ -153,12 +152,9 @@ function getRjExceptBuyer(seller, buyer) {
 function updateCredibility(buyer, seller) {
 
 
-	var buyers = Transactions.filter(function(item) {
-		if (item.buyer.BID == buyer.BID && item.seller.SID == seller.SID)
-			return true
-	})
+	var buyers = TransactionsB[buyer.BID]
 
-	var Rj = getRjExceptBuyer(seller, buyer)
+	
 		//计算
 	if (buyers.length > 0) {
 
@@ -166,7 +162,7 @@ function updateCredibility(buyer, seller) {
 		var ssum = 0;
 		buyers.forEach(function(item) {
 			wsum += item.Wij;
-			ssum += item.Wij * Rj
+			ssum += item.Wij * item.Rk_j
 		})
 		let result = ssum / wsum
 		buyer.Cj = result
@@ -258,7 +254,7 @@ function createBuyer(num) {
 			"BID": i,
 			"name": "buyer" + i,
 			"type": BT,
-			"Cj": 0.5,
+			"Cj": 0,
 			"buyerUtility": 0,
 			"isChange": false,
 			"originalType": BT
@@ -282,7 +278,7 @@ function createSeller(num) {
 			"name": "seller" + i,
 			"honesty": SH,
 			"price": 16 + SH * 4,
-			"Rj": 0.5,
+			"Rj": SH,
 			"Utility": 0,
 			"type": stype
 		}

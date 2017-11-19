@@ -15,6 +15,7 @@ function createOrder(num, rate) {
 		typeof badTransactions1[currentBuyer.BID] == "undefined" ? badTransactions1[currentBuyer.BID] = [] : 1;
 		typeof badTransactions2[currentBuyer.BID] == "undefined" ? badTransactions2[currentBuyer.BID] = [] : 1;
 		typeof badTransactions3[currentBuyer.BID] == "undefined" ? badTransactions3[currentBuyer.BID] = [] : 1;
+		typeof TransactionsB[currentBuyer.BID] == "undefined" ? TransactionsB[currentBuyer.BID] = [] : 1;
 		typeof type3LastTx[currentBuyer.BID] == "undefined" ? type3LastTx[currentBuyer.BID] = [] : 1;
 		//买家类型为1
 		if (currentBuyer.type == 1) {
@@ -28,6 +29,14 @@ function createOrder(num, rate) {
 			while (currentSeller.honesty < 0.5 || isSellerIn(currentSeller, badTransactions1[currentBuyer.BID])) {
 				currentSeller = findSeller()
 			}
+			// var tx = TransactionsB[currentBuyer.BID].filter(function(item){
+			// 	if(item.seller.SID == currentSeller.SID){
+			// 		return true;
+			// 	}
+			// })
+			// if(tx){
+			// 	updateCredibility(currentBuyer, currentSeller)
+			// }
 			//一定概率不交易
 			var R = Math.random()
 			if (R > currentSeller.honesty) {
@@ -46,8 +55,17 @@ function createOrder(num, rate) {
 			while (currentSeller.honesty >= 0.5 || isSellerIn(currentSeller, badTransactions2[currentBuyer.BID])) {
 
 				currentSeller = findSeller()
-
 			}
+			// var tx = TransactionsB[currentBuyer.BID].filter(function(item){
+			// 	if(item.seller.SID == currentSeller.SID){
+			// 		return true;
+			// 	}
+			// })
+			// if(tx){
+			// 	updateCredibility(currentBuyer, currentSeller)
+			// }
+
+
 			var R = Math.random()
 			if (R > currentSeller.honesty) {
 				badrat = true;
@@ -100,6 +118,7 @@ function createOrder(num, rate) {
 						}
 						type3LastTx[currentBuyer.BID][0] = nextSeller;
 						
+						updateCredibility(currentBuyer, currentSeller)
 					}
 
 				}
@@ -136,10 +155,19 @@ function createOrder(num, rate) {
 		if (badrat) {
 			badrat = false;
 			var R = Math.random()
-			while (R > currentSeller.honesty) {
+			if(currentSeller.honesty > 0.5){
+				while (R > currentSeller.honesty || R < 0.5) {
 					R = Math.random()
 				}
 				sp = R
+			}
+			else{
+				while (R > currentSeller.honesty) {
+					R = Math.random()
+				}
+				sp = R
+			}
+			
 			// if (R < rate) {
 			// 	R = Math.random()
 			// 	while (R < currentSeller.honesty) {
@@ -156,6 +184,11 @@ function createOrder(num, rate) {
 		}
 		//好评虚拟
 		else {
+			var R = Math.random()
+			while (R < currentSeller.honesty) {
+				R = Math.random()
+			}
+			sp = R
 			// var R = Math.random()
 			// 	//0.5几率给差评
 			// if (R < rate) {
@@ -167,9 +200,11 @@ function createOrder(num, rate) {
 			// 	sp = R
 			// }
 		}
-
-		updateCredibility(currentBuyer, currentSeller)
-		updateHonest(currentSeller)
+		
+		typeof TransactionsS[currentSeller.SID] == "undefined" ? TransactionsS[currentSeller.SID] = [] : 1;
+		
+		
+		
 		currentBuyer.utility = currentBuyer.Cj * currentSeller.honesty * 4
 
 		var Transaction = {
@@ -177,18 +212,28 @@ function createOrder(num, rate) {
 			"seller": currentSeller,
 			"Tid": j + 1,
 			"truePrice": currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4,
-			"Wij": calculateWij(currentBuyer, currentSeller),
+			"Wij": currentBuyer.type == 3 ? calculateWij(currentBuyer, currentSeller) : 1,
 			'ratting': sp,
 			"bt": currentBuyer.type,
-			"butility": currentBuyer.utility
+			"butility": currentBuyer.utility,
+			"Rk_j":getRjExceptBuyer(currentSeller,currentSeller)
 
 		}
-		console.log("订单：" + j);
+		TransactionsB[currentBuyer.BID].push(Transaction)
+		TransactionsS[currentSeller.SID].push(Transaction)
+		//console.log("订单：" + j);
 
 		Transactions.push(Transaction)
+		updateHonest(currentSeller)
+		if(currentBuyer.type!=3){
+			updateCredibility(currentBuyer, currentSeller)
+		}
+		if(currentBuyer.BID == 49){
+			console.log(49+" => "+currentSeller.SID+" , "+currentSeller.Rj+" , "+currentBuyer.Cj + " , "+Transaction.Rk_j)
+		}
 		if (pos == 0 && j != 0) {
 
-
+			//console.table(Buyers)
 			var c1 = Buyers.filter((item) => {
 				if (item.type == 1)
 					return true
@@ -221,6 +266,7 @@ function createOrder(num, rate) {
 			b1p.push(tmps1 / c1.length)
 			b2p.push(tmps2 / c2.length)
 			b3p.push(tmps3 / c3.length)
+			console.log(tmps2 / c2.length)
 			ss += 1;
 			xz.push(ss)
 		}
@@ -229,7 +275,7 @@ function createOrder(num, rate) {
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(100200,0)
+createOrder(20000,0)
 
 
 
