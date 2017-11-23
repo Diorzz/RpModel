@@ -227,7 +227,7 @@ function findSelleProbability() {
 		return currentSeller;
 	}
 	//3/15的概率选择0.7的商家
-	else if (R < (6 / 15)) {
+	else if (R < (5 / 15)) {
 		var x = randomNum(120, 140)
 		var currentSeller = Sellers[x]
 		return currentSeller;

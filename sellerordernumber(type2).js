@@ -42,7 +42,6 @@ function createOrder(num, rate) {
 				badrat = true;
 				badTransactions1[currentBuyer.BID].push(currentSeller)
 			}
-
 		}
 		//买家类型为2
 		if (currentBuyer.type == 2) {
@@ -117,28 +116,28 @@ function createOrder(num, rate) {
 				}
 				//第一次交易
 				else {
-					// while (currentSeller.honesty < 0.5) {
-					
-					// }
-					currentSeller = findSelleProbability()
+					while (currentSeller.honesty < 0.5) {
+						currentSeller = findSeller();
+					}
+					//currentSeller = findSelleProbability()
 					type3LastTx[currentBuyer.BID][0] = currentSeller
 					//如果交易失败，给差评
-					// var R = Math.random()
-					// if (R > currentSeller.honesty) {
-					// 	badrat = true;
-					// 	badTransactions3[currentBuyer.BID].push(currentSeller)
-					// 	if (badTransactions3[currentBuyer.BID].length >= 100)
-					// 		continue;
-					// 	//重新寻找下一个要交易的商家
-					// 	var nextSeller = findSeller()
-					// 	while (nextSeller.honesty < 0.5 || isSellerIn(nextSeller, badTransactions3[currentBuyer.BID])) {
-					// 		nextSeller = findSeller()
-					// 	}
-					// 	type3LastTx[currentBuyer.BID][0] = nextSeller;
+					var R = Math.random()
+					if (R > currentSeller.honesty) {
+						//badrat = true;
+						badTransactions3[currentBuyer.BID].push(currentSeller)
+						if (badTransactions3[currentBuyer.BID].length >= 100)
+							continue;
+						//重新寻找下一个要交易的商家
+						var nextSeller = findSeller()
+						while (nextSeller.honesty < 0.5 || isSellerIn(nextSeller, badTransactions3[currentBuyer.BID])) {
+							nextSeller = findSeller()
+						}
+						type3LastTx[currentBuyer.BID][0] = nextSeller;
 
-					// } else {
-					// 	type3LastTx[currentBuyer.BID][0] = currentSeller
-					// }
+					} else {
+						type3LastTx[currentBuyer.BID][0] = currentSeller
+					}
 				}
 			}
 
@@ -205,7 +204,7 @@ function createOrder(num, rate) {
 			"seller": currentSeller,
 			"Tid": j + 1,
 			"truePrice": currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4,
-			"sutility":badrat == true ? (4/3) * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
+			"sutility":badrat == true ? (3/2) * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
 			"Wij": currentBuyer.type == 3 ? calculateWij(currentBuyer, currentSeller) : 1,
 			'ratting': sp,
 			"bt": currentBuyer.type,
@@ -539,14 +538,14 @@ function createOrderD(num, rate) {
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(75000, 0)
+createOrder(100000, 0)
 
 function sumUtility(tx){
 	var sum = 0;
 	tx.forEach(x =>{
-		sum += x.sutility
+		sum += x.seller.Rj
 	})
-	return sum;
+	return sum/tx.length;
 }
 console.table(Transactions.filter(x => {
 	if (x.seller.type == 1) {
@@ -614,7 +613,7 @@ var ydata = [o1,o2,o3,o4,o5,o6,o7,o8,o9]
 init()
 createBuyer(99)
 createSeller(180)
-createOrderD(75000, 0)
+createOrderD(100000, 0)
 console.table(Transactions.filter(x => {
 	if (x.seller.type == 1) {
 		return true
@@ -687,7 +686,7 @@ var myChart = echarts.init(document.getElementById('main'));
 //指定图表的配置项和数据
 var option = {
 	title: {
-		text: 'Seller Utility',
+		text: 'Seller Reputation',
 	},
 	tooltip: {},
 	toolbox: {

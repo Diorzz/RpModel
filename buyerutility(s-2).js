@@ -85,12 +85,12 @@ function createOrder(num, rate) {
 
 			// } 
 			if (badTransactions3[currentBuyer.BID].length >= 100) {
-				// typeof goodTransaction[currentBuyer.BID] == "undefined" ? goodTransaction[currentBuyer.BID] = [] : 1;
+				typeof goodTransaction[currentBuyer.BID] == "undefined" ? goodTransaction[currentBuyer.BID] = [] : 1;
 
-				// currentBuyer.isChange = true;
-				// var nextSeller = findSelleProbability()
-				// goodTransaction[currentBuyer.BID].push(nextSeller)
-				// currentSeller = nextSeller
+				currentBuyer.isChange = true;
+				var nextSeller = findSelleProbability()
+				goodTransaction[currentBuyer.BID].push(nextSeller)
+				currentSeller = nextSeller
 				//continue;
 
 			} else  {
@@ -205,7 +205,7 @@ function createOrder(num, rate) {
 			"seller": currentSeller,
 			"Tid": j + 1,
 			"truePrice": currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4,
-			"sutility":badrat == true ? (4/3) * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
+			"sutility":badrat ? 2 * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
 			"Wij": currentBuyer.type == 3 ? calculateWij(currentBuyer, currentSeller) : 1,
 			'ratting': sp,
 			"bt": currentBuyer.type,
@@ -226,44 +226,44 @@ function createOrder(num, rate) {
 			console.log(49 + " => " + currentSeller.SID + " , " + currentSeller.Rj + " , " + currentBuyer.Cj + " , " + Transaction.Rk_j)
 		}
 		badrat = false;
-		// if (pos == 0 && j != 0) {
+		if (pos == 0 && j != 0) {
 
-		// 	//console.table(Buyers)
-		// 	var c1 = Transactions.filter((item) => {
-		// 		if (item.bt == 1)
-		// 			return true
-		// 	})
-		// 	var c2 = Transactions.filter((item) => {
-		// 		if (item.bt == 2)
-		// 			return true
-		// 	})
-		// 	var c3 = Transactions.filter((item) => {
-		// 		if (item.bt == 3)
-		// 			return true
-		// 	})
+			//console.table(Buyers)
+			var c1 = Transactions.filter((item) => {
+				if (item.bt == 1)
+					return true
+			})
+			var c2 = Transactions.filter((item) => {
+				if (item.bt == 2)
+					return true
+			})
+			var c3 = Transactions.filter((item) => {
+				if (item.bt == 3)
+					return true
+			})
 
-		// 	var tmps1 = 0,
-		// 		tmps2 = 0,
-		// 		tmps3 = 0
+			var tmps1 = 0,
+				tmps2 = 0,
+				tmps3 = 0
 
 
 
-		// 	c1.forEach((item) => {
-		// 		tmps1 += item.butility
-		// 	})
-		// 	c2.forEach((item) => {
-		// 		tmps2 += item.butility
-		// 	})
-		// 	c3.forEach((item) => {
-		// 		tmps3 += item.butility
-		// 	})
-		// 	b1p.push(tmps1)
-		// 	b2p.push(tmps2)
-		// 	b3p.push(tmps3)
-		// 	//console.log(tmps2 / c2.length)
-		// 	ss += 1;
-		// 	xz.push(ss)
-		// }
+			c1.forEach((item) => {
+				tmps1 += item.butility
+			})
+			c2.forEach((item) => {
+				tmps2 += item.butility
+			})
+			c3.forEach((item) => {
+				tmps3 += item.butility
+			})
+			b1p.push(tmps1)
+			b2p.push(tmps2)
+			b3p.push(tmps3)
+			//console.log(tmps2 / c2.length)
+			ss += 1;
+			xz.push(ss)
+		}
 	}
 }
 
@@ -475,7 +475,7 @@ function createOrderD(num, rate) {
 			"seller": currentSeller,
 			"Tid": j + 1,
 			"truePrice": currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4,
-			"sutility":badrat == true ? (3/2) * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
+			"sutility":badrat ? 2 * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
 			"Wij": currentBuyer.type == 3 ? calculateWij(currentBuyer, currentSeller) : 1,
 			'ratting': sp,
 			"bt": currentBuyer.type,
@@ -496,185 +496,56 @@ function createOrderD(num, rate) {
 			console.log(49 + " => " + currentSeller.SID + " , " + currentSeller.Rj + " , " + currentBuyer.Cj + " , " + Transaction.Rk_j)
 		}
 		badrat = false;
-		// if (pos == 0 && j != 0) {
+		if (pos == 0 && j != 0) {
 
-		// 	//console.table(Buyers)
-		// 	var c1 = Transactions.filter((item) => {
-		// 		if (item.bt == 1)
-		// 			return true
-		// 	})
-		// 	var c2 = Transactions.filter((item) => {
-		// 		if (item.bt == 2)
-		// 			return true
-		// 	})
-		// 	var c3 = Transactions.filter((item) => {
-		// 		if (item.bt == 3)
-		// 			return true
-		// 	})
+			//console.table(Buyers)
+			var c1 = Transactions.filter((item) => {
+				if (item.bt == 1)
+					return true
+			})
+			var c2 = Transactions.filter((item) => {
+				if (item.bt == 2)
+					return true
+			})
+			var c3 = Transactions.filter((item) => {
+				if (item.bt == 3)
+					return true
+			})
 
-		// 	var tmps1 = 0,
-		// 		tmps2 = 0,
-		// 		tmps3 = 0
+			var tmps1 = 0,
+				tmps2 = 0,
+				tmps3 = 0
 
 
 
-		// 	c1.forEach((item) => {
-		// 		tmps1 += item.butility
-		// 	})
-		// 	c2.forEach((item) => {
-		// 		tmps2 += item.butility
-		// 	})
-		// 	c3.forEach((item) => {
-		// 		tmps3 += item.butility
-		// 	})
-		// 	b1p2.push(tmps1)
-		// 	b2p2.push(tmps2)
-		// 	b3p2.push(tmps3)
-		// 	console.log(tmps2 / c2.length)
-		// 	ss += 1;
-		// 	xz2.push(ss)
-		// }
+			c1.forEach((item) => {
+				tmps1 += item.butility
+			})
+			c2.forEach((item) => {
+				tmps2 += item.butility
+			})
+			c3.forEach((item) => {
+				tmps3 += item.butility
+			})
+			b1p2.push(tmps1)
+			b2p2.push(tmps2)
+			b3p2.push(tmps3)
+			console.log(tmps2 / c2.length)
+			ss += 1;
+			xz2.push(ss)
+		}
 	}
 }
 init()
 createBuyer(99)
 createSeller(180)
-createOrder(75000, 0)
-
-function sumUtility(tx){
-	var sum = 0;
-	tx.forEach(x =>{
-		sum += x.sutility
-	})
-	return sum;
-}
-console.table(Transactions.filter(x => {
-	if (x.seller.type == 1) {
-		return true
-	}
-}))
-
-console.error("xx")
-var o1 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 1) {
-		return true
-	}
-}))
-var o2 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 2) {
-		return true
-	}
-}))
-
-var o3 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 3) {
-		return true
-	}
-}))
-
-var o4 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 4) {
-		return true
-	}
-}))
-
-var o5 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 5) {
-		return true
-	}
-}))
-
-var o6 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 6) {
-		return true
-	}
-}))
-
-var o7 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 7) {
-		return true
-	}
-}))
-
-var o8 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 8) {
-		return true
-	}
-}))
-
-var o9 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 9) {
-		return true
-	}
-}))
-
-var xdata = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-var ydata = [o1,o2,o3,o4,o5,o6,o7,o8,o9]
+createOrder(65000, 0)
 
 init()
 createBuyer(99)
 createSeller(180)
-createOrderD(75000, 0)
-console.table(Transactions.filter(x => {
-	if (x.seller.type == 1) {
-		return true
-	}
-}))
+createOrderD(65000, 0)
 
-var o11 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 1) {
-		return true
-	}
-}))
-var o22 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 2) {
-		return true
-	}
-}))
-
-var o33 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 3) {
-		return true
-	}
-}))
-
-var o44 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 4) {
-		return true
-	}
-}))
-
-var o55 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 5) {
-		return true
-	}
-}))
-
-var o66 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 6) {
-		return true
-	}
-}))
-
-var o77 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 7) {
-		return true
-	}
-}))
-
-var o88 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 8) {
-		return true
-	}
-}))
-
-var o99 = sumUtility(Transactions.filter(x => {
-	if (x.seller.type == 9) {
-		return true
-	}
-}))
-
-var ydata2 = [o11,o22,o33,o44,o55,o66,o77,o88,o99]
 
 
 
@@ -687,7 +558,7 @@ var myChart = echarts.init(document.getElementById('main'));
 //指定图表的配置项和数据
 var option = {
 	title: {
-		text: 'Seller Utility',
+		text: 'Buyer Utility',
 	},
 	tooltip: {},
 	toolbox: {
@@ -719,7 +590,7 @@ var option = {
 		}],
 	},
 	xAxis: {
-		data: xdata
+		data: xz
 	},
 	yAxis: {
 	},
@@ -727,7 +598,7 @@ var option = {
 		name: 'Nash',
 		type: 'line',
 		smooth: true,
-		data: ydata,
+		data: b3p,
 		lineStyle: {
 			normal: {
 				type: "dotted"
@@ -751,7 +622,7 @@ var option = {
 		name: 'Dishonesty',
 		type: 'line',
 		smooth: true,
-		data: ydata2,
+		data: b3p2,
 		itemStyle:{
 			normal:{
 				color:"black"

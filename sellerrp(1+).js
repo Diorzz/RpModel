@@ -28,8 +28,8 @@ function createOrder(num, rate) {
 		if (currentBuyer.type == 1) {
 
 			if (badTransactions1[currentBuyer.BID].length >= 100) {
-				currentBuyer.type = 3
-				currentBuyer.isChange = true;
+				//currentBuyer.type = 3
+				//currentBuyer.isChange = true;
 				continue
 			}
 			//寻找信誉大于0.5的且从未交易过的商家
@@ -37,18 +37,18 @@ function createOrder(num, rate) {
 				currentSeller = findSeller()
 			}
 			//一定概率不交易
-			var R = Math.random()
-			if (R > currentSeller.honesty) {
-				badrat = true;
-				badTransactions1[currentBuyer.BID].push(currentSeller)
-			}
+			// var R = Math.random()
+			// if (R > currentSeller.honesty) {
+			// 	badrat = true;
+			// 	badTransactions1[currentBuyer.BID].push(currentSeller)
+			// }
 
 		}
 		//买家类型为2
 		if (currentBuyer.type == 2) {
 			if (badTransactions2[currentBuyer.BID].length >= 80) {
-				currentBuyer.type = 3
-				currentBuyer.isChange = true;
+				//currentBuyer.type = 3
+				//currentBuyer.isChange = true;
 				continue;
 			}
 
@@ -57,11 +57,11 @@ function createOrder(num, rate) {
 				currentSeller = findSeller()
 			}
 
-			var R = Math.random()
-			if (R > currentSeller.honesty) {
-				badrat = true;
-				badTransactions2[currentBuyer.BID].push(currentSeller)
-			}
+			// var R = Math.random()
+			// if (R > currentSeller.honesty) {
+			// 	badrat = true;
+			// 	badTransactions2[currentBuyer.BID].push(currentSeller)
+			// }
 		}
 		//买家类型为3
 		if (currentBuyer.type == 3) {
@@ -148,19 +148,19 @@ function createOrder(num, rate) {
 		var sp = currentSeller.honesty;
 		if (badrat) {
 			
-			var R = Math.random()
-			if (currentSeller.honesty > 0.5) {
-				while (R > currentSeller.honesty) {
-					R = Math.random()
-				}
-				sp = R
-			} else {
-				while (R > currentSeller.honesty) {
-					R = Math.random()
-				}
-				sp = R
-			}
-
+			// var R = Math.random()
+			// if (currentSeller.honesty > 0.5) {
+			// 	while (R > currentSeller.honesty) {
+			// 		R = Math.random()
+			// 	}
+			// 	sp = R
+			// } else {
+			// 	while (R > currentSeller.honesty) {
+			// 		R = Math.random()
+			// 	}
+			// 	sp = R
+			// }
+			sp = 0
 			// if (R < rate) {
 			// 	R = Math.random()
 			// 	while (R < currentSeller.honesty) {
@@ -178,7 +178,7 @@ function createOrder(num, rate) {
 		//好评虚拟
 		else {
 			var R = Math.random()
-			while (R < currentSeller.honesty) {
+			while (R < currentSeller.honesty || R > currentSeller.honesty+0.1) {
 				R = Math.random()
 			}
 			sp = R
@@ -205,7 +205,7 @@ function createOrder(num, rate) {
 			"seller": currentSeller,
 			"Tid": j + 1,
 			"truePrice": currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4,
-			"sutility":badrat == true ? (4/3) * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
+			"sutility":badrat == true ? (3/2) * (currentSeller.price - currentBuyer.Cj * currentSeller.honesty * 4) - 20 : 4,
 			"Wij": currentBuyer.type == 3 ? calculateWij(currentBuyer, currentSeller) : 1,
 			'ratting': sp,
 			"bt": currentBuyer.type,
@@ -286,8 +286,8 @@ function createOrderD(num, rate) {
 		if (currentBuyer.type == 1) {
 
 			if (badTransactions1[currentBuyer.BID].length >= 100) {
-				currentBuyer.type = 3
-				currentBuyer.isChange = true;
+				//currentBuyer.type = 3
+				//currentBuyer.isChange = true;
 				continue
 			}
 			//寻找信誉大于0.5的且从未交易过的商家
@@ -313,8 +313,8 @@ function createOrderD(num, rate) {
 		//买家类型为2
 		if (currentBuyer.type == 2) {
 			if (badTransactions2[currentBuyer.BID].length >= 80) {
-				currentBuyer.type = 3
-				currentBuyer.isChange = true;
+				//currentBuyer.type = 3
+				//currentBuyer.isChange = true;
 				continue;
 			}
 			while (currentSeller.honesty >= 0.5 || isSellerIn(currentSeller, badTransactions2[currentBuyer.BID])) {
@@ -418,19 +418,19 @@ function createOrderD(num, rate) {
 		var sp = currentSeller.honesty;
 		if (badrat) {
 			
-			var R = Math.random()
-			if (currentSeller.honesty > 0.5) {
-				while (R > currentSeller.honesty) {
-					R = Math.random()
-				}
-				sp = R
-			} else {
-				while (R > currentSeller.honesty) {
-					R = Math.random()
-				}
-				sp = R
-			}
-
+			// var R = Math.random()
+			// if (currentSeller.honesty > 0.5) {
+			// 	while (R > currentSeller.honesty) {
+			// 		R = Math.random()
+			// 	}
+			// 	sp = R
+			// } else {
+			// 	while (R > currentSeller.honesty) {
+			// 		R = Math.random()
+			// 	}
+			// 	sp = R
+			// }
+			sp = 0
 			// if (R < rate) {
 			// 	R = Math.random()
 			// 	while (R < currentSeller.honesty) {
@@ -448,7 +448,7 @@ function createOrderD(num, rate) {
 		//好评虚拟
 		else {
 			var R = Math.random()
-			while (R < currentSeller.honesty) {
+			while (R < currentSeller.honesty || R > currentSeller.honesty+0.1) {
 				R = Math.random()
 			}
 			sp = R
@@ -544,9 +544,9 @@ createOrder(75000, 0)
 function sumUtility(tx){
 	var sum = 0;
 	tx.forEach(x =>{
-		sum += x.sutility
+		sum += x.seller.Rj
 	})
-	return sum;
+	return sum/tx.length;
 }
 console.table(Transactions.filter(x => {
 	if (x.seller.type == 1) {
@@ -687,7 +687,7 @@ var myChart = echarts.init(document.getElementById('main'));
 //指定图表的配置项和数据
 var option = {
 	title: {
-		text: 'Seller Utility',
+		text: 'Seller Reputation',
 	},
 	tooltip: {},
 	toolbox: {
